@@ -48,7 +48,7 @@ describe('ReactDOM', function() {
   */
 
   it("allows a DOM element to be used with a string", function() {
-    var element = React.createElement('div', { className: 'foo' });
+    var element = React.createElement('div', {className: 'foo'});
     var instance = ReactTestUtils.renderIntoDocument(element);
     expect(instance.getDOMNode().tagName).toBe('DIV');
   });
@@ -118,4 +118,5 @@ describe('ReactDOM', function() {
     expect(element.type).toBe('div');
     expect(console.warn.argsForCall.length).toBe(0);
   });
+
 });

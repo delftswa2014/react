@@ -57,14 +57,14 @@ describe('ReactCompositeComponent-state', function() {
 
       componentWillMount: function() {
         this.peekAtState('componentWillMount-start');
-        this.setState(function (state) {
+        this.setState(function(state) {
           this.peekAtState('before-setState-sunrise', state);
         });
         this.setState(
           {color: 'sunrise'},
           this.peekAtCallback('setState-sunrise')
         );
-        this.setState(function (state) {
+        this.setState(function(state) {
           this.peekAtState('after-setState-sunrise', state);
         });
         this.peekAtState('componentWillMount-after-sunrise');
@@ -72,7 +72,7 @@ describe('ReactCompositeComponent-state', function() {
           {color: 'orange'},
           this.peekAtCallback('setState-orange')
         );
-        this.setState(function (state) {
+        this.setState(function(state) {
           this.peekAtState('after-setState-orange', state);
         });
         this.peekAtState('componentWillMount-end');
@@ -90,19 +90,19 @@ describe('ReactCompositeComponent-state', function() {
       componentWillReceiveProps: function(newProps) {
         this.peekAtState('componentWillReceiveProps-start');
         if (newProps.nextColor) {
-          this.setState(function (state) {
+          this.setState(function(state) {
             this.peekAtState('before-setState-receiveProps', state);
             return {color: newProps.nextColor};
           });
-          this.replaceState({ color: undefined });
+          this.replaceState({color: undefined});
           this.setState(
-            function (state) {
+            function(state) {
               this.peekAtState('before-setState-again-receiveProps', state);
               return {color: newProps.nextColor};
             },
             this.peekAtCallback('setState-receiveProps')
           );
-          this.setState(function (state) {
+          this.setState(function(state) {
             this.peekAtState('after-setState-receiveProps', state);
           });
         }
@@ -155,67 +155,67 @@ describe('ReactCompositeComponent-state', function() {
 
     expect(stateListener.mock.calls).toEqual([
       // there is no state when getInitialState() is called
-      [ 'getInitialState', null ],
-      [ 'componentWillMount-start', 'red' ],
+      ['getInitialState', null],
+      ['componentWillMount-start', 'red'],
       // setState()'s only enqueue pending states.
-      [ 'componentWillMount-after-sunrise', 'red' ],
-      [ 'componentWillMount-end', 'red' ],
+      ['componentWillMount-after-sunrise', 'red'],
+      ['componentWillMount-end', 'red'],
       // pending state queue is processed
-      [ 'before-setState-sunrise', 'red' ],
-      [ 'after-setState-sunrise', 'sunrise' ],
-      [ 'after-setState-orange', 'orange' ],
+      ['before-setState-sunrise', 'red'],
+      ['after-setState-sunrise', 'sunrise'],
+      ['after-setState-orange', 'orange'],
       // pending state has been applied
-      [ 'render', 'orange' ],
-      [ 'componentDidMount-start', 'orange' ],
+      ['render', 'orange'],
+      ['componentDidMount-start', 'orange'],
       // setState-sunrise and setState-orange should be called here,
       // after the bug in #1740
       // componentDidMount() called setState({color:'yellow'}), which is async.
       // The update doesn't happen until the next flush.
-      [ 'componentDidMount-end', 'orange' ],
-      [ 'shouldComponentUpdate-currentState', 'orange' ],
-      [ 'shouldComponentUpdate-nextState', 'yellow' ],
-      [ 'componentWillUpdate-currentState', 'orange' ],
-      [ 'componentWillUpdate-nextState', 'yellow' ],
-      [ 'render', 'yellow' ],
-      [ 'componentDidUpdate-currentState', 'yellow' ],
-      [ 'componentDidUpdate-prevState', 'orange' ],
-      [ 'setState-yellow', 'yellow' ],
-      [ 'initial-callback', 'yellow' ],
-      [ 'componentWillReceiveProps-start', 'yellow' ],
+      ['componentDidMount-end', 'orange'],
+      ['shouldComponentUpdate-currentState', 'orange'],
+      ['shouldComponentUpdate-nextState', 'yellow'],
+      ['componentWillUpdate-currentState', 'orange'],
+      ['componentWillUpdate-nextState', 'yellow'],
+      ['render', 'yellow'],
+      ['componentDidUpdate-currentState', 'yellow'],
+      ['componentDidUpdate-prevState', 'orange'],
+      ['setState-yellow', 'yellow'],
+      ['initial-callback', 'yellow'],
+      ['componentWillReceiveProps-start', 'yellow'],
       // setState({color:'green'}) only enqueues a pending state.
-      [ 'componentWillReceiveProps-end', 'yellow' ],
+      ['componentWillReceiveProps-end', 'yellow'],
       // pending state queue is processed
       // before-setState-receiveProps never called, due to replaceState.
-      [ 'before-setState-again-receiveProps', undefined ],
-      [ 'after-setState-receiveProps', 'green' ],
-      [ 'shouldComponentUpdate-currentState', 'yellow' ],
-      [ 'shouldComponentUpdate-nextState', 'green' ],
-      [ 'componentWillUpdate-currentState', 'yellow' ],
-      [ 'componentWillUpdate-nextState', 'green' ],
-      [ 'render', 'green' ],
-      [ 'componentDidUpdate-currentState', 'green' ],
-      [ 'componentDidUpdate-prevState', 'yellow' ],
-      [ 'setState-receiveProps', 'green' ],
-      [ 'setProps', 'green' ],
+      ['before-setState-again-receiveProps', undefined],
+      ['after-setState-receiveProps', 'green'],
+      ['shouldComponentUpdate-currentState', 'yellow'],
+      ['shouldComponentUpdate-nextState', 'green'],
+      ['componentWillUpdate-currentState', 'yellow'],
+      ['componentWillUpdate-nextState', 'green'],
+      ['render', 'green'],
+      ['componentDidUpdate-currentState', 'green'],
+      ['componentDidUpdate-prevState', 'yellow'],
+      ['setState-receiveProps', 'green'],
+      ['setProps', 'green'],
       // setFavoriteColor('blue')
-      [ 'shouldComponentUpdate-currentState', 'green' ],
-      [ 'shouldComponentUpdate-nextState', 'blue' ],
-      [ 'componentWillUpdate-currentState', 'green' ],
-      [ 'componentWillUpdate-nextState', 'blue' ],
-      [ 'render', 'blue' ],
-      [ 'componentDidUpdate-currentState', 'blue' ],
-      [ 'componentDidUpdate-prevState', 'green' ],
-      [ 'setFavoriteColor', 'blue' ],
+      ['shouldComponentUpdate-currentState', 'green'],
+      ['shouldComponentUpdate-nextState', 'blue'],
+      ['componentWillUpdate-currentState', 'green'],
+      ['componentWillUpdate-nextState', 'blue'],
+      ['render', 'blue'],
+      ['componentDidUpdate-currentState', 'blue'],
+      ['componentDidUpdate-prevState', 'green'],
+      ['setFavoriteColor', 'blue'],
       // forceUpdate()
-      [ 'componentWillUpdate-currentState', 'blue' ],
-      [ 'componentWillUpdate-nextState', 'blue' ],
-      [ 'render', 'blue' ],
-      [ 'componentDidUpdate-currentState', 'blue' ],
-      [ 'componentDidUpdate-prevState', 'blue' ],
-      [ 'forceUpdate', 'blue' ],
+      ['componentWillUpdate-currentState', 'blue'],
+      ['componentWillUpdate-nextState', 'blue'],
+      ['render', 'blue'],
+      ['componentDidUpdate-currentState', 'blue'],
+      ['componentDidUpdate-prevState', 'blue'],
+      ['forceUpdate', 'blue'],
       // unmountComponent()
       // state is available within `componentWillUnmount()`
-      [ 'componentWillUnmount', 'blue' ]
+      ['componentWillUnmount', 'blue']
     ]);
   });
 });

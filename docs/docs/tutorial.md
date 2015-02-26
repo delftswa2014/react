@@ -25,7 +25,7 @@ It'll also have a few neat features:
 
 ### Running a server
 
-While it's not necessary to get started with this tutorial, later on we'll be adding functionality that requires `POST`ing to a running server. If this is something you are intimately familiar with and want to create your own server, please do. For the rest of you who might want to focus on learning about React without having to worry about the server-side aspects, we have written simple servers in a number of languages - JavaScript (using Node.js), Python, and Ruby. These are all available on GitHub. You can [view the source](https://github.com/reactjs/react-tutorial/) or [download a zip file](https://github.com/reactjs/react-tutorial/archive/master.zip) to get started.
+While it's not necessary to get started with this tutorial, later on we'll be adding functionality that requires `POST`ing to a running server. If this is something you are intimately familiar with and want to create your own server, please do. For the rest of you who might want to focus on learning about React without having to worry about the server-side aspects, we have written simple servers in a number of languages - JavaScript (using Node.js), Python, Ruby, Go, and PHP. These are all available on GitHub. You can [view the source](https://github.com/reactjs/react-tutorial/) or [download a zip file](https://github.com/reactjs/react-tutorial/archive/master.zip) to get started.
 
 To get started using the tutorial download, just start editing `public/index.html`.
 
@@ -38,9 +38,9 @@ For this tutorial, we'll use prebuilt JavaScript files on a CDN. Open up your fa
 <html>
   <head>
     <title>Hello React</title>
-    <script src="http://fb.me/react-{{site.react_version}}.js"></script>
-    <script src="http://fb.me/JSXTransformer-{{site.react_version}}.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script src="https://fb.me/react-{{site.react_version}}.js"></script>
+    <script src="https://fb.me/JSXTransformer-{{site.react_version}}.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
   </head>
   <body>
     <div id="content"></div>
@@ -218,10 +218,10 @@ First, add the third-party **Showdown** library to your application. This is a J
 <!-- index.html -->
 <head>
   <title>Hello React</title>
-  <script src="http://fb.me/react-{{site.react_version}}.js"></script>
-  <script src="http://fb.me/JSXTransformer-{{site.react_version}}.js"></script>
-  <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
+  <script src="https://fb.me/react-{{site.react_version}}.js"></script>
+  <script src="https://fb.me/JSXTransformer-{{site.react_version}}.js"></script>
+  <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 </head>
 ```
 

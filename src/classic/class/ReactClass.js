@@ -12,6 +12,7 @@
 'use strict';
 
 var ReactComponent = require('ReactComponent');
+var ReactCurrentOwner = require('ReactCurrentOwner');
 var ReactElement = require('ReactElement');
 var ReactErrorUtils = require('ReactErrorUtils');
 var ReactInstanceMap = require('ReactInstanceMap');
@@ -669,7 +670,7 @@ function bindAutoBindMethod(component, method) {
           false,
           'bind(): You are binding a component method to the component. ' +
           'React does this for you automatically in a high-performance ' +
-          'way, so you can safely remove this call. See ',
+          'way, so you can safely remove this call. See %s',
           componentName
         );
         return boundMethod;
@@ -746,6 +747,21 @@ var ReactClassMixin = {
    * @final
    */
   isMounted: function() {
+    if (__DEV__) {
+      var owner = ReactCurrentOwner.current;
+      if (owner !== null) {
+        warning(
+          owner._warnedAboutRefsInRender,
+          '%s is accessing isMounted inside its render() function. ' +
+          'render() should be a pure function of props and state. It should ' +
+          'never access something that requires stale data from the previous ' +
+          'render, such as refs. Move this logic to componentDidMount and ' +
+          'componentDidUpdate instead.',
+          owner.getName() || 'A component'
+        );
+        owner._warnedAboutRefsInRender = true;
+      }
+    }
     var internalInstance = ReactInstanceMap.get(this);
     return (
       internalInstance &&
@@ -811,6 +827,14 @@ var ReactClass = {
     var Constructor = function(props, context) {
       // This constructor is overridden by mocks. The argument is used
       // by mocks to assert on what gets mounted.
+
+      if (__DEV__) {
+        warning(
+          this instanceof Constructor,
+          'Something is calling a React component directly. Use a factory or ' +
+          'JSX instead. See: http://fb.me/react-legacyfactory'
+        );
+      }
 
       // Wire up auto-binding
       if (this.__reactAutoBindMap) {

@@ -292,6 +292,19 @@ function warnForPropsMutation(propName, element) {
   );
 }
 
+// Inline Object.is polyfill
+function is(a, b) {
+  if (a !== a) {
+    // NaN
+    return b !== b;
+  }
+  if (a === 0 && b === 0) {
+    // +-0
+    return 1 / a === 1 / b;
+  }
+  return a === b;
+}
+
 /**
  * Given an element, check if its props have been mutated since element
  * creation (or the last call to this function). In particular, check if any
@@ -313,7 +326,7 @@ function checkAndWarnForMutatedProps(element) {
   for (var propName in props) {
     if (props.hasOwnProperty(propName)) {
       if (!originalProps.hasOwnProperty(propName) ||
-          originalProps[propName] !== props[propName]) {
+          !is(originalProps[propName], props[propName])) {
         warnForPropsMutation(propName, element);
 
         // Copy over the new value so that the two props objects match again
@@ -387,6 +400,33 @@ var ReactElementValidator = {
     );
     // Legacy hook TODO: Warn if this is accessed
     validatedFactory.type = type;
+
+    if (__DEV__) {
+      try {
+        Object.defineProperty(
+          validatedFactory,
+          'type',
+          {
+            enumerable: false,
+            get: function() {
+              warning(
+                false,
+                'Factory.type is deprecated. Access the class directly ' +
+                'before passing it to createFactory.'
+              );
+              Object.defineProperty(this, 'type', {
+                value: type
+              });
+              return type;
+            }
+          }
+        );
+      } catch (x) {
+        // IE will fail on defineProperty (es5-shim/sham too)
+      }
+    }
+
+
     return validatedFactory;
   }
 

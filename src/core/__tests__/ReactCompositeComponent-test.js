@@ -21,14 +21,12 @@ var ReactPropTypes;
 var ReactServerRendering;
 var ReactTestUtils;
 
-var cx;
 var reactComponentExpect;
 var mocks;
 
 describe('ReactCompositeComponent', function() {
 
   beforeEach(function() {
-    cx = require('cx');
     mocks = require('mocks');
 
     reactComponentExpect = require('reactComponentExpect');
@@ -66,7 +64,7 @@ describe('ReactCompositeComponent', function() {
         return this.refs.anch;
       },
       render: function() {
-        var className = cx({'anchorClass': this.props.anchorClassOn});
+        var className = this.props.anchorClassOn ? 'anchorClass' : '';
         return this.props.renderAnchor ?
           <a ref="anch" className={className}></a> :
           <b></b>;
@@ -303,7 +301,7 @@ describe('ReactCompositeComponent', function() {
 
     var Component = React.createClass({
       getInitialState: function() {
-        return { value: 0 };
+        return {value: 0};
       },
       render: function() {
         return <div />;
@@ -314,12 +312,12 @@ describe('ReactCompositeComponent', function() {
     expect(instance.setState).not.toBeDefined();
 
     instance = React.render(instance, container);
-    instance.setState({ value: 1 });
+    instance.setState({value: 1});
 
     expect(console.warn.calls.length).toBe(0);
 
     React.unmountComponentAtNode(container);
-    instance.setState({ value: 2 });
+    instance.setState({value: 2});
     expect(console.warn.calls.length).toBe(1);
     expect(console.warn.argsForCall[0][0]).toBe(
       'Warning: setState(...): Can only update a mounted or ' +
@@ -336,11 +334,11 @@ describe('ReactCompositeComponent', function() {
 
     var Component = React.createClass({
       getInitialState: function() {
-        return { value: 0 };
+        return {value: 0};
       },
       componentWillUnmount: function() {
         expect(() => {
-          this.setState({ value: 2 }, function() {
+          this.setState({value: 2}, function() {
             cbCalled = true;
           })
         }).not.toThrow();
@@ -352,7 +350,7 @@ describe('ReactCompositeComponent', function() {
 
     var instance = React.render(<Component />, container);
 
-    instance.setState({ value: 1 });
+    instance.setState({value: 1});
     expect(console.warn.calls.length).toBe(0);
 
     React.unmountComponentAtNode(container);
@@ -375,13 +373,13 @@ describe('ReactCompositeComponent', function() {
 
     instance = React.render(instance, container);
     expect(function() {
-      instance.setProps({ value: 1 });
+      instance.setProps({value: 1});
     }).not.toThrow();
     expect(console.warn.calls.length).toBe(0);
 
     React.unmountComponentAtNode(container);
     expect(function() {
-      instance.setProps({ value: 2 });
+      instance.setProps({value: 2});
     }).not.toThrow();
 
     expect(console.warn.calls.length).toBe(1);
@@ -478,7 +476,7 @@ describe('ReactCompositeComponent', function() {
 
   it('should warn when shouldComponentUpdate() returns undefined', function() {
     var Component = React.createClass({
-      getInitialState: function () {
+      getInitialState: function() {
         return {bogus: false};
       },
 
@@ -498,6 +496,50 @@ describe('ReactCompositeComponent', function() {
     expect(console.warn.argsForCall[0][0]).toBe(
       'Warning: Component.shouldComponentUpdate(): Returned undefined instead of a ' +
       'boolean value. Make sure to return true or false.'
+    );
+  });
+
+  it('should warn when owner is necessary', function() {
+
+    var Chooser = React.createClass({
+      render: function() {
+        return this.props.selection == 1 ? this.props.child1 : this.props.child2;
+      }
+    });
+
+    var CoolParent1 = React.createClass({
+      render: function() {
+        return <Chooser
+          selection={this.props.selection}
+          child1={<input value='foo' readOnly='true' />}
+          child2={this.props.child2} />;
+      }
+    });
+
+    var CoolParent2 = React.createClass({
+      render: function() {
+        return <CoolParent1
+          selection={this.props.selection}
+          child2={<input value='foo' readOnly='true' />} />;
+      }
+    });
+
+    var div = document.createElement('div');
+    React.render(<CoolParent2 selection={1} />, div);
+    expect(console.warn.argsForCall.length).toBe(0);
+    React.render(<CoolParent2 selection={2} />, div);
+    expect(console.warn.argsForCall.length).toBe(1);
+    React.render(<CoolParent2 selection={1} />, div);
+    React.render(<CoolParent2 selection={2} />, div);
+    expect(console.warn.argsForCall.length).toBe(1);
+
+    expect(console.warn.argsForCall[0][0]).toBe(
+      'Warning: <input /> is being rendered by both CoolParent1 and ' +
+      'CoolParent2 using the same key (null) in the same place. Currently, ' +
+      'this means that they don\'t preserve state. This behavior should be ' +
+      'very rare so we\'re considering deprecating it. Please contact the ' +
+      'React team and explain your use case so that we can take that into ' +
+      'consideration.'
     );
   });
 
@@ -579,8 +621,8 @@ describe('ReactCompositeComponent', function() {
 
     expect(console.warn.argsForCall.length).toBe(1);
     expect(console.warn.argsForCall[0][0]).toBe(
-      'Warning: owner-based and parent-based contexts differ '+
-      '(values: `bar` vs `undefined`) for key (foo) '+
+      'Warning: owner-based and parent-based contexts differ ' +
+      '(values: `bar` vs `undefined`) for key (foo) ' +
       'while mounting Component (see: http://fb.me/react-context-by-parent)'
     );
 
@@ -713,7 +755,7 @@ describe('ReactCompositeComponent', function() {
       },
 
       getChildContext: function() {
-        return { foo: this.props.foo };
+        return {foo: this.props.foo};
       },
 
       render: function() { return <Parent><Component /></Parent>; }
@@ -834,11 +876,11 @@ describe('ReactCompositeComponent', function() {
     var renders = 0;
     var Component = React.createClass({
       getInitialState: function() {
-        return { updated: false };
+        return {updated: false};
       },
       componentWillReceiveProps: function(props) {
         expect(props.update).toBe(1);
-        this.setState({ updated: true });
+        this.setState({updated: true});
       },
       render: function() {
         renders++;

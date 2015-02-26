@@ -300,9 +300,9 @@ describe('traverseAllChildren', function() {
         return {
           next: function() {
             if (i++ < 3) {
-              return { value: <div />, done: false };
+              return {value: <div />, done: false};
             } else {
-              return { value: undefined, done: true };
+              return {value: undefined, done: true};
             }
           }
         };
@@ -351,9 +351,9 @@ describe('traverseAllChildren', function() {
         return {
           next: function() {
             if (i++ < 3) {
-              return { value: <div key={'#'+i} />, done: false };
+              return {value: <div key={'#' + i} />, done: false};
             } else {
-              return { value: undefined, done: true };
+              return {value: undefined, done: true};
             }
           }
         };
@@ -396,15 +396,17 @@ describe('traverseAllChildren', function() {
   });
 
   it('should use keys from entry iterables', function() {
+    spyOn(console, 'warn');
+
     var threeDivEntryIterable = {
       '@@iterator': function() {
         var i = 0;
         return {
           next: function() {
             if (i++ < 3) {
-              return { value: ['#'+i, <div />], done: false };
+              return {value: ['#' + i, <div />], done: false};
             } else {
-              return { value: undefined, done: true };
+              return {value: undefined, done: true};
             }
           }
         };
@@ -444,6 +446,13 @@ describe('traverseAllChildren', function() {
       traverseContext[2],
       '.$#3:0',
       2
+    );
+
+    expect(console.warn.argsForCall.length).toBe(1);
+    expect(console.warn.argsForCall[0][0]).toContain(
+      'Warning: Using Maps as children is not yet fully supported. It is an ' +
+      'experimental feature that might be removed. Convert it to a sequence ' +
+      '/ iterable of keyed ReactElements instead.'
     );
   });
 
