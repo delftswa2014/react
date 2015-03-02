@@ -14,7 +14,7 @@
 var React = require('React');
 var ReactTestUtils = require('ReactTestUtils');
 
-var reactComponentExpect= require('reactComponentExpect');
+var reactComponentExpect = require('reactComponentExpect');
 
 
 /**
@@ -34,7 +34,7 @@ var ClickCounter = React.createClass({
   render: function() {
     var children = [];
     var i;
-    for (i=0; i < this.state.count; i++) {
+    for (i = 0; i < this.state.count; i++) {
       children.push(
         <div
           className="clickLogDiv"
@@ -166,7 +166,7 @@ describe('ref swapping', function() {
       return {count: 0};
     },
     moveRef: function() {
-      this.setState({ count: this.state.count + 1 });
+      this.setState({count: this.state.count + 1});
     },
     render: function() {
       var count = this.state.count;

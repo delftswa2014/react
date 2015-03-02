@@ -56,7 +56,7 @@ describe('ReactElement', function() {
   });
 
   it('does not reuse the original config object', function() {
-    var config = { foo: 1 };
+    var config = {foo: 1};
     var element = React.createFactory(ComponentClass)(config);
     expect(element.props.foo).toBe(1);
     config.foo = 2;
@@ -95,7 +95,7 @@ describe('ReactElement', function() {
         foo: React.PropTypes.string
       },
       getChildContext: function() {
-        return { foo: 'bar' };
+        return {foo: 'bar'};
       },
       render: function() {
         element = Component();
@@ -107,7 +107,7 @@ describe('ReactElement', function() {
       React.createElement(Wrapper)
     );
 
-    expect(element._context).toEqual({ foo: 'bar' });
+    expect(element._context).toEqual({foo: 'bar'});
   });
 
   it('preserves the owner on the element', function() {
@@ -222,7 +222,7 @@ describe('ReactElement', function() {
   });
 
   it('is indistinguishable from a plain object', function() {
-    var element = React.createElement('div', { className: 'foo' });
+    var element = React.createElement('div', {className: 'foo'});
     var object = {};
     expect(element.constructor).toBe(object.constructor);
   });
@@ -239,7 +239,7 @@ describe('ReactElement', function() {
 
     var container = document.createElement('div');
     var instance = React.render(
-      React.createElement(Component, { fruit: 'mango' }),
+      React.createElement(Component, {fruit: 'mango'}),
       container
     );
     expect(instance.props.fruit).toBe('mango');
@@ -264,7 +264,7 @@ describe('ReactElement', function() {
     expect(instance.props.prop).toBe('testKey');
 
     var inst2 = ReactTestUtils.renderIntoDocument(
-      React.createElement(Component, { prop: null })
+      React.createElement(Component, {prop: null})
     );
     expect(inst2.props.prop).toBe(null);
   });
@@ -348,4 +348,17 @@ describe('ReactElement', function() {
       'Don\'t set .props.sound of the React component <Outer />.'
     );
   });
+
+  it('does not warn for NaN props', function() {
+    spyOn(console, 'warn');
+    var Test = React.createClass({
+      render: function() {
+        return <div />;
+      }
+    });
+    var test = ReactTestUtils.renderIntoDocument(<Test value={+undefined} />);
+    expect(test.props.value).toBeNaN();
+    expect(console.warn.argsForCall.length).toBe(0);
+  });
+
 });
